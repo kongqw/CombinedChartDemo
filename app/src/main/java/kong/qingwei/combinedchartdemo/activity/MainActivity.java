@@ -2,6 +2,7 @@ package kong.qingwei.combinedchartdemo.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -71,4 +72,5 @@ public class MainActivity extends AppCompatActivity {
         // 填充数据
         mChart.setData(empty);
     }
+
 }

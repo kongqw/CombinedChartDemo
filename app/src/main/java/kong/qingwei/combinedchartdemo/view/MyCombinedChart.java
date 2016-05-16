@@ -1,10 +1,13 @@
 package kong.qingwei.combinedchartdemo.view;
 
+import android.app.Service;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Vibrator;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.CombinedChart;
@@ -14,32 +17,43 @@ import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.listener.OnDrawListener;
 
 import java.util.ArrayList;
 
+import kong.qingwei.combinedchartdemo.utils.MyChartHighlighter;
+import kong.qingwei.combinedchartdemo.utils.MyCustomXAxisValueFormatter;
 import kong.qingwei.combinedchartdemo.bean.CombinedChartEntity;
 
 /**
  * Created by kqw on 2016/5/16.
  * MyCombinedChart
  */
-public class MyCombinedChart extends CombinedChart {
-    public MyCombinedChart(Context context) {
-        super(context);
-        initChart();
-    }
+public class MyCombinedChart extends CombinedChart implements OnChartGestureListener, OnChartValueSelectedListener {
+
+    private static final String TAG = "MyCombinedChart";
+
+    private boolean isTranslate;
+    private final int mWidth;
+    private final Vibrator mVibrator;
+    private MyChartHighlighter myChartHighlighter;
 
     public MyCombinedChart(Context context, AttributeSet attrs) {
         super(context, attrs);
         initChart();
-    }
 
-    public MyCombinedChart(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        initChart();
+        mVibrator = (Vibrator) context.getSystemService(Service.VIBRATOR_SERVICE);
+
+        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        mWidth = windowManager.getDefaultDisplay().getWidth();
     }
 
     private void initChart() {
@@ -48,53 +62,51 @@ public class MyCombinedChart extends CombinedChart {
         setDrawGridBackground(false);
         setDrawBarShadow(false);
 
-        // draw bars behind lines
-        setDrawOrder(new CombinedChart.DrawOrder[]{
-                CombinedChart.DrawOrder.BAR, CombinedChart.DrawOrder.BUBBLE, CombinedChart.DrawOrder.CANDLE, CombinedChart.DrawOrder.LINE, CombinedChart.DrawOrder.SCATTER
-        });
-
         // 取消Y轴缩放动画
         setScaleYEnabled(false);
 
+        // 自动缩放调整
         setAutoScaleMinMaxEnabled(true);
 
-        YAxis rightAxis = getAxisRight();
-        rightAxis.setDrawGridLines(false);
+//        YAxis leftAxis = getAxisLeft();
+//        leftAxis.setDrawGridLines(false);
+//        YAxis rightAxis = getAxisRight();
+//        rightAxis.setDrawGridLines(true);
 
-        YAxis leftAxis = getAxisLeft();
-        leftAxis.setDrawGridLines(false);
-//        leftAxis.setStartAtZero(false);
+        YAxis left = getAxisLeft();
+        // 左侧Y轴坐标
+        left.setDrawLabels(true);
+        // 左侧Y轴
+        left.setDrawAxisLine(true);
+        // 横向线
+        left.setDrawGridLines(true);
+        left.setDrawZeroLine(true);
 
+        left.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        getAxisRight().setEnabled(false);
+
+        /*
+        * X轴
+        * ******************************************************************************/
         XAxis xAxis = getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
-//        xAxis.setYOffset(80);
+        // 格式化X轴时间
+        xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
 
 
-        setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-//                mVibrator.vibrate(100);
-                Toast.makeText(getContext().getApplicationContext(), "长按", Toast.LENGTH_SHORT).show();
-                setDragEnabled(false);
-                getData().setHighlightEnabled(true);
-                return false;
-            }
-        });
+        /*
+        * 图形触摸监听
+        * *********************************************************************************/
+        setOnChartGestureListener(this);
 
-        setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_CANCEL:
-                    case MotionEvent.ACTION_UP:
-                        setDragEnabled(true);
-                        getData().setHighlightEnabled(false);
-                        break;
-                }
-                return false;
-            }
-        });
+        /*
+        * 被选择监听（高亮监听）
+        * **********************************************************************************/
+        setOnChartValueSelectedListener(this);
+
+        // 用来将像素转成index
+        myChartHighlighter = new MyChartHighlighter(this);
+
     }
 
     /**
@@ -103,11 +115,11 @@ public class MyCombinedChart extends CombinedChart {
      * @param entity 数据实体
      */
     public void setData(CombinedChartEntity entity) {
-        ArrayList<String> mY = new ArrayList();
+        ArrayList<String> timeY = new ArrayList<>();
         for (int i = 0; i < entity.getData().size(); i++) {
-            mY.add(entity.getData().get(i).get(5) + "");
+            timeY.add(entity.getData().get(i).get(0) + "");
         }
-        CombinedData data = new CombinedData(mY);
+        CombinedData data = new CombinedData(timeY);
         data.setData(generateCandleData(entity));
         data.setData(generateLineData(entity));
         //        data.setData(generateBarData(empty));
@@ -116,14 +128,16 @@ public class MyCombinedChart extends CombinedChart {
         setData(data);
 
         notifyDataSetChanged();
+
         // 最多显示60组数据
         setVisibleXRangeMaximum(60);
         // 最少显示30组数据
         setVisibleXRangeMinimum(30);
-        // 移动到最右侧数据
-        moveViewToX(entity.getData().size() - 1);
         // 显示
         invalidate();
+        // 移动到最右侧数据
+        moveViewToX(entity.getData().size() - 1);
+
     }
 
     protected CandleData generateCandleData(CombinedChartEntity entity) {
@@ -136,7 +150,7 @@ public class MyCombinedChart extends CombinedChart {
             long dd = entity.getData().get(index).get(4) / 1000;
             entries.add(new CandleEntry(index, a, b, c, dd));
         }
-        CandleDataSet set = new CandleDataSet(entries, "Candle DataSet");
+        CandleDataSet set = new CandleDataSet(entries, "K线");
         set.setColor(Color.rgb(80, 80, 80));
         set.setValueTextSize(10f);
         set.setDrawValues(false);
@@ -174,4 +188,86 @@ public class MyCombinedChart extends CombinedChart {
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         return set;
     }
+
+
+    /*
+    * Gesture callbacks
+    * Start
+    * *******************************************************************************/
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+//        Log.i(TAG, "onChartGestureStart");
+        isTranslate = false;
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+//        Log.i(TAG, "onChartGestureEnd");
+        setDragEnabled(true);
+        getData().setHighlightEnabled(false);
+    }
+
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+//        Log.i(TAG, "onChartLongPressed");
+        if (!isTranslate) {
+            Toast.makeText(getContext().getApplicationContext(), "长按\n震动50毫秒\n可以左右滑动  查看数据", Toast.LENGTH_SHORT).show();
+            // 震动50毫秒
+            mVibrator.vibrate(50);
+            setDragEnabled(false);
+            getData().setHighlightEnabled(true);
+
+            float x = me.getRawX();
+            // TODO 通过像素换算index  高亮显示
+            int index = myChartHighlighter.getXIndex(x);
+            highlightValue(index, 0);
+        }
+    }
+
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+//        Log.i(TAG, "onChartDoubleTapped");
+    }
+
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+//        Log.i(TAG, "onChartSingleTapped");
+    }
+
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+//        Log.i(TAG, "onChartFling");
+    }
+
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+//        Log.i(TAG, "onChartScale");
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+        isTranslate = true;
+    }
+    /* End *******************************************************************************/
+
+    /*
+    * Selection callbacks
+    * Start
+    * *******************************************************************************/
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+        // TODO index转换成像素
+//        float f = me.getRawX();
+//        if (f < mWidth / 2) {
+//            Log.i(TAG, "显示在右侧");
+//        } else {
+//            Log.i(TAG, "显示在左侧");
+//        }
+    }
+
+    @Override
+    public void onNothingSelected() {
+        Log.i(TAG, "onNothingSelected");
+    }
+    /* End *******************************************************************************/
 }
