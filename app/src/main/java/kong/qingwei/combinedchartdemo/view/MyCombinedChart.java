@@ -29,6 +29,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 
+import kong.qingwei.combinedchartdemo.listener.OnValueSelectedListener;
 import kong.qingwei.combinedchartdemo.utils.MyChartHighlighter;
 import kong.qingwei.combinedchartdemo.utils.MyCustomXAxisValueFormatter;
 import kong.qingwei.combinedchartdemo.bean.CombinedChartEntity;
@@ -45,6 +46,8 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
     private final int mWidth;
     private final Vibrator mVibrator;
     private MyChartHighlighter myChartHighlighter;
+    private CombinedChartEntity mCombinedChartEntity;
+    private OnValueSelectedListener mOnValueSelectedListener;
 
     private Handler invalidate = new Handler() {
         @Override
@@ -119,6 +122,7 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
      * @param entity 数据实体
      */
     public void setData(CombinedChartEntity entity) {
+        mCombinedChartEntity = entity;
         ArrayList<String> timeY = new ArrayList<>();
         for (int i = 0; i < entity.getData().size(); i++) {
             timeY.add(entity.getData().get(i).get(0) + "");
@@ -210,6 +214,10 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
 //        Log.i(TAG, "onChartGestureEnd");
         setDragEnabled(true);
         getData().setHighlightEnabled(false);
+
+        if (null != mOnValueSelectedListener) {
+            mOnValueSelectedListener.end();
+        }
     }
 
     @Override
@@ -226,6 +234,15 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
             // TODO 通过像素换算index  高亮显示
             int index = myChartHighlighter.getXIndex(x);
             highlightValue(index, 0);
+
+            if (null != mOnValueSelectedListener) {
+                mOnValueSelectedListener.start();
+                long open = mCombinedChartEntity.getData().get(index).get(1) / 1000;
+                long close = mCombinedChartEntity.getData().get(index).get(2) / 1000;
+                long high = mCombinedChartEntity.getData().get(index).get(3) / 1000;
+                long low = mCombinedChartEntity.getData().get(index).get(4) / 1000;
+                mOnValueSelectedListener.data(open, close, high, low);
+            }
         }
     }
 
@@ -268,6 +285,19 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
 //        } else {
 //            Log.i(TAG, "显示在左侧");
 //        }
+
+        try {
+            assert null != mCombinedChartEntity;
+            long open = mCombinedChartEntity.getData().get(e.getXIndex()).get(1) / 1000;
+            long close = mCombinedChartEntity.getData().get(e.getXIndex()).get(2) / 1000;
+            long high = mCombinedChartEntity.getData().get(e.getXIndex()).get(3) / 1000;
+            long low = mCombinedChartEntity.getData().get(e.getXIndex()).get(4) / 1000;
+            if (null != mOnValueSelectedListener) {
+                mOnValueSelectedListener.data(open, close, high, low);
+            }
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
     }
 
     @Override
@@ -275,4 +305,8 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
         Log.i(TAG, "onNothingSelected");
     }
     /* End *******************************************************************************/
+
+    public void setOnValueSelectedListener(OnValueSelectedListener listener) {
+        mOnValueSelectedListener = listener;
+    }
 }
