@@ -1,4 +1,4 @@
-package kong.qingwei.combinedchartdemo;
+package kong.qingwei.combinedchartdemo.net;
 
 import android.util.Log;
 
@@ -12,6 +12,8 @@ import com.squareup.okhttp.Response;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+
+import kong.qingwei.combinedchartdemo.bean.CombinedChartEntity;
 
 /**
  * Created by kongqw on 2015/11/28.
@@ -60,7 +62,7 @@ public class CombinedChartConnector {
             public void onResponse(Response response) throws IOException {
                 String htmlStr = response.body().string();
                 Log.i("CombinedChartConnector","htmlStr = " + htmlStr);
-                CombinedChartEmpty empty = mGson.fromJson(htmlStr,CombinedChartEmpty.class);
+                CombinedChartEntity empty = mGson.fromJson(htmlStr,CombinedChartEntity.class);
                 EventBus.getDefault().post(empty);
             }
         });

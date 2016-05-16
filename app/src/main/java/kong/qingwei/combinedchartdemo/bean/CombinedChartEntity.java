@@ -1,11 +1,11 @@
-package kong.qingwei.combinedchartdemo;
+package kong.qingwei.combinedchartdemo.bean;
 import java.util.List;
 
 /**
  * Created by kqw on 2016/5/13.
- * CombinedChartEmpty
+ * CombinedChartEntity
  */
-public class CombinedChartEmpty {
+public class CombinedChartEntity {
     private Object err_msg;
     private int err_no;
     private List<List<Long>> data;
