@@ -3,6 +3,8 @@ package kong.qingwei.combinedchartdemo.view;
 import android.app.Service;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Vibrator;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,7 +19,6 @@ import com.github.mikephil.charting.data.CandleData;
 import com.github.mikephil.charting.data.CandleDataSet;
 import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.CombinedData;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -25,7 +26,6 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.listener.OnDrawListener;
 
 import java.util.ArrayList;
 
@@ -45,6 +45,13 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
     private final int mWidth;
     private final Vibrator mVibrator;
     private MyChartHighlighter myChartHighlighter;
+
+    private Handler invalidate = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            invalidate();
+        }
+    };
 
     public MyCombinedChart(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -68,11 +75,9 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
         // 自动缩放调整
         setAutoScaleMinMaxEnabled(true);
 
-//        YAxis leftAxis = getAxisLeft();
-//        leftAxis.setDrawGridLines(false);
-//        YAxis rightAxis = getAxisRight();
-//        rightAxis.setDrawGridLines(true);
-
+        /*
+        * Y轴
+        * ******************************************************************************/
         YAxis left = getAxisLeft();
         // 左侧Y轴坐标
         left.setDrawLabels(true);
@@ -80,9 +85,9 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
         left.setDrawAxisLine(true);
         // 横向线
         left.setDrawGridLines(true);
-        left.setDrawZeroLine(true);
-
+        // 纵轴数据显示在图形内部
         left.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        // 不显示右侧Y轴
         getAxisRight().setEnabled(false);
 
         /*
@@ -92,7 +97,6 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         // 格式化X轴时间
         xAxis.setValueFormatter(new MyCustomXAxisValueFormatter());
-
 
         /*
         * 图形触摸监听
@@ -133,11 +137,13 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
         setVisibleXRangeMaximum(60);
         // 最少显示30组数据
         setVisibleXRangeMinimum(30);
-        // 显示
-        invalidate();
         // 移动到最右侧数据
         moveViewToX(entity.getData().size() - 1);
-
+        /*
+         延迟100毫秒执行invalidate
+        为了解决控件使用setAutoScaleMinMaxEnabled方法后的一个小bug
+          */
+        invalidate.sendEmptyMessageDelayed(0, 100);
     }
 
     protected CandleData generateCandleData(CombinedChartEntity entity) {
@@ -188,7 +194,6 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         return set;
     }
-
 
     /*
     * Gesture callbacks

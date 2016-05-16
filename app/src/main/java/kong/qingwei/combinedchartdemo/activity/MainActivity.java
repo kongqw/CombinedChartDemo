@@ -2,7 +2,6 @@ package kong.qingwei.combinedchartdemo.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -28,31 +27,6 @@ public class MainActivity extends AppCompatActivity {
         // 获取数据
         CombinedChartConnector.getInstance().connect();
 
-//        mChart.setOnTouchListener(new ChartTouchListener(mChart) {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                switch (event.getAction()){
-//                    case MotionEvent.ACTION_CANCEL:
-//                    case MotionEvent.ACTION_UP:
-//                        Toast.makeText(getApplicationContext(),"抬起",Toast.LENGTH_SHORT).show();
-//                        break;
-//                }
-//                return true;
-//            }
-//        });
-
-//        mChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-//            @Override
-//            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-//                Log.i("onValueSelected", "dataSetIndex = " + dataSetIndex);
-//            }
-//
-//            @Override
-//            public void onNothingSelected() {
-//
-//            }
-//        });
-
     }
 
     @Override
@@ -72,5 +46,4 @@ public class MainActivity extends AppCompatActivity {
         // 填充数据
         mChart.setData(empty);
     }
-
 }
