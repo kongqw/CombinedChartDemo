@@ -68,7 +68,7 @@ public class MyCombinedChart extends CombinedChart {
         XAxis xAxis = getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
 //        xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
-        xAxis.setYOffset(80);
+//        xAxis.setYOffset(80);
 
 
         setOnLongClickListener(new View.OnLongClickListener() {
