@@ -4,11 +4,13 @@ import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,19 +31,21 @@ public class MyTabLayout extends TabLayout {
             "日K",
             "周K",
             "月K"};
-    private Spinner spinner;
+    private MyPopupWindow myPopupWindow;
 
     public MyTabLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initMyTabLayout();
+        initMyTabLayout(context);
     }
 
-    private void initMyTabLayout() {
+    private void initMyTabLayout(Context context) {
         for (int i = 0; i < 5; i++) {
             Tab tab = newTab();
             tab.setCustomView(getTabView(i));
             addTab(tab);
         }
+        // PopupWindow
+        myPopupWindow = new MyPopupWindow(context);
     }
 
     public View getTabView(int position) {
@@ -59,24 +63,13 @@ public class MyTabLayout extends TabLayout {
                 break;
             case 4:
                 v = LayoutInflater.from(getContext().getApplicationContext()).inflate(R.layout.custom_tab2, null);
-//                spinner = (Spinner) v.findViewById(R.id.spinner);
-//                // 建立数据源
-//                String[] mItems = {"5分钟", "15分钟", "30分钟", "60分钟"};
-//                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext().getApplicationContext(), android.R.layout.simple_spinner_item, mItems);
-//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                spinner.setAdapter(adapter);
-//                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//                    @Override
-//                    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-//                        // TODO
-//                        getTabAt(4).select();
-//                    }
-//
-//                    @Override
-//                    public void onNothingSelected(AdapterView<?> parent) {
-//                        // TODO
-//                    }
-//                });
+                v.findViewById(R.id.button).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        myPopupWindow.startAnimation();
+                        myPopupWindow.toggle(v);
+                    }
+                });
                 break;
         }
         return v;
