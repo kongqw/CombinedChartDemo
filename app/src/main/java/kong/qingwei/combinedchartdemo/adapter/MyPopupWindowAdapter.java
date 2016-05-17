@@ -39,13 +39,14 @@ public class MyPopupWindowAdapter extends RecyclerView.Adapter<MyPopupWindowAdap
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final int finalPosition = position;
         holder.mTextView.setText(mItems[position]);
         holder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mOnPopupWindowItemClickListener)
-                    mOnPopupWindowItemClickListener.click(position);
+                    mOnPopupWindowItemClickListener.click(finalPosition);
             }
         });
     }
