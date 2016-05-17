@@ -4,9 +4,9 @@
     android:background="#FF888888"
     android:layout_height="wrap_content">
 
-    <Button
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        android:text="分钟pop" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

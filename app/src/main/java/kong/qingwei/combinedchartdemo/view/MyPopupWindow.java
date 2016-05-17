@@ -3,6 +3,9 @@ package kong.qingwei.combinedchartdemo.view;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -12,19 +15,24 @@ import android.view.animation.ScaleAnimation;
 import android.widget.PopupWindow;
 
 import kong.qingwei.combinedchartdemo.R;
+import kong.qingwei.combinedchartdemo.adapter.MyPopupWindowAdapter;
+import kong.qingwei.combinedchartdemo.listener.OnPopupWindowItemClickListener;
 
 /**
  * Created by kqw on 2016/5/17.
  * MyPopupWindow
  */
-public class MyPopupWindow extends PopupWindow implements View.OnKeyListener {
+public class MyPopupWindow extends PopupWindow implements View.OnKeyListener, OnPopupWindowItemClickListener {
 
     private PopupWindow mPopupWindow;
     private final View mContentView;
+    private OnPopupWindowItemClickListener mOnPopupWindowItemClickListener;
+    private MyPopupWindowAdapter mPopupWindowAdapter;
 
     public MyPopupWindow(Context context) {
         // 获取弹出的PopupWindow的界面
         mContentView = View.inflate(context, R.layout.popupwindow, null);
+        initRecyclerView(context);
         // 监听点击返回键
         mContentView.setOnKeyListener(this);
         // 创建一个PopupWindow并默认获取焦点（如果没有焦点view无法监听到点击事件）
@@ -32,6 +40,21 @@ public class MyPopupWindow extends PopupWindow implements View.OnKeyListener {
         // 设置PopupWindow之外的其他位置消失
         mPopupWindow.setOutsideTouchable(true);
     }
+
+    private void initRecyclerView(Context context) {
+        RecyclerView mRecyclerView = (RecyclerView) mContentView.findViewById(R.id.recyclerView);
+        // 如果数据的填充不会改变RecyclerView的布局大小，那么这个设置可以提高RecyclerView的性能
+        mRecyclerView.setHasFixedSize(true);
+        // 设置这个RecyclerView是线性布局
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        // 给RecyclerView添加一个适配器显示数据
+        mPopupWindowAdapter = new MyPopupWindowAdapter();
+        // 添加PopupWindow条目点击的监听
+        mPopupWindowAdapter.setOnPopupWindowItemClickListener(this);
+        mRecyclerView.setAdapter(mPopupWindowAdapter);
+    }
+
 
     /**
      * 设置动画
@@ -91,5 +114,25 @@ public class MyPopupWindow extends PopupWindow implements View.OnKeyListener {
             default:
                 return false;
         }
+    }
+
+    @Override
+    public void click(int position) {
+        mOnPopupWindowItemClickListener.click(position);
+        dismiss();
+        Log.i("MyPopupWindow","position = " + position);
+    }
+
+    /**
+     * 添加条目点击的监听
+     *
+     * @param listener 回调接口
+     */
+    public void setOnPopupWindowItemClickListener(OnPopupWindowItemClickListener listener) {
+        mOnPopupWindowItemClickListener = listener;
+    }
+
+    public String getContent(int position) {
+        return mPopupWindowAdapter.getContent(position);
     }
 }

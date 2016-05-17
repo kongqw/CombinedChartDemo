@@ -4,25 +4,20 @@ import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.PopupWindow;
-import android.widget.Spinner;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import kong.qingwei.combinedchartdemo.R;
+import kong.qingwei.combinedchartdemo.listener.OnPopupWindowItemClickListener;
 
 
 /**
  * Created by kqw on 2016/5/17.
  * 模拟自选股导航栏
  */
-public class MyTabLayout extends TabLayout {
+public class MyTabLayout extends TabLayout implements View.OnClickListener, OnPopupWindowItemClickListener, TabLayout.OnTabSelectedListener {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -32,6 +27,7 @@ public class MyTabLayout extends TabLayout {
             "周K",
             "月K"};
     private MyPopupWindow myPopupWindow;
+    private Button mButton;
 
     public MyTabLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -44,8 +40,10 @@ public class MyTabLayout extends TabLayout {
             tab.setCustomView(getTabView(i));
             addTab(tab);
         }
+        setOnTabSelectedListener(this);
         // PopupWindow
         myPopupWindow = new MyPopupWindow(context);
+        myPopupWindow.setOnPopupWindowItemClickListener(this);
     }
 
     public View getTabView(int position) {
@@ -63,16 +61,42 @@ public class MyTabLayout extends TabLayout {
                 break;
             case 4:
                 v = LayoutInflater.from(getContext().getApplicationContext()).inflate(R.layout.custom_tab2, null);
-                v.findViewById(R.id.button).setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-//                        myPopupWindow.startAnimation();
-                        myPopupWindow.toggle(v);
-                    }
-                });
+                mButton = (Button) v.findViewById(R.id.button);
+                mButton.setOnClickListener(this);
                 break;
         }
         return v;
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.button:
+                myPopupWindow.toggle(v);
+                break;
+        }
+    }
+
+    @Override
+    public void click(int position) {
+        mButton.setText(myPopupWindow.getContent(position));
+        getTabAt(getTabCount() - 1).select();
+    }
+
+    @Override
+    public void onTabSelected(Tab tab) {
+
+    }
+
+    @Override
+    public void onTabUnselected(Tab tab) {
+        if (getTabCount() - 1 == tab.getPosition()) {
+            mButton.setText("分钟");
+        }
+    }
+
+    @Override
+    public void onTabReselected(Tab tab) {
+
+    }
 }
