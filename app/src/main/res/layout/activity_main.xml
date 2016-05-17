@@ -5,10 +5,16 @@
     android:layout_height="match_parent"
     tools:context=".activity.MainActivity">
 
+    <kong.qingwei.combinedchartdemo.view.MyTabLayout
+        android:id="@+id/myTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
     <kong.qingwei.combinedchartdemo.view.MyCombinedChart
         android:id="@+id/combinedChart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/myTabLayout" />
 
     <LinearLayout
         android:id="@+id/details"
