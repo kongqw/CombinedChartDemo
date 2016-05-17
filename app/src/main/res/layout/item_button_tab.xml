@@ -3,17 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--<Spinner-->
-        <!--android:id="@+id/spinner"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:dropDownVerticalOffset="50dp"-->
-        <!--android:background="#FF888888" />-->
-
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="分钟"/>
+        android:background="@android:drawable/btn_dropdown"
+        android:textColor="#FF000000"
+        android:text="分钟" />
 
 </RelativeLayout>

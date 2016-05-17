@@ -205,13 +205,11 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
     * *******************************************************************************/
     @Override
     public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-//        Log.i(TAG, "onChartGestureStart");
         isTranslate = false;
     }
 
     @Override
     public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-//        Log.i(TAG, "onChartGestureEnd");
         setDragEnabled(true);
         getData().setHighlightEnabled(false);
 
@@ -222,7 +220,6 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
 
     @Override
     public void onChartLongPressed(MotionEvent me) {
-//        Log.i(TAG, "onChartLongPressed");
         if (!isTranslate) {
             Toast.makeText(getContext().getApplicationContext(), "长按\n震动50毫秒\n可以左右滑动  查看数据", Toast.LENGTH_SHORT).show();
             // 震动50毫秒
@@ -248,22 +245,18 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
 
     @Override
     public void onChartDoubleTapped(MotionEvent me) {
-//        Log.i(TAG, "onChartDoubleTapped");
     }
 
     @Override
     public void onChartSingleTapped(MotionEvent me) {
-//        Log.i(TAG, "onChartSingleTapped");
     }
 
     @Override
     public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-//        Log.i(TAG, "onChartFling");
     }
 
     @Override
     public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-//        Log.i(TAG, "onChartScale");
     }
 
     @Override

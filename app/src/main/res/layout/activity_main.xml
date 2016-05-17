@@ -19,57 +19,74 @@
     <LinearLayout
         android:id="@+id/details"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:background="#FFFFFFFF"
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="right"
             android:text="开盘:" />
 
         <TextView
             android:id="@+id/open"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             tools:text="2015" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="right"
             android:text="收盘:" />
 
         <TextView
             android:id="@+id/close"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             tools:text="2015" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="right"
             android:text="最高:" />
 
         <TextView
             android:id="@+id/high"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             tools:text="2015" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:gravity="right"
             android:text="最低:" />
 
         <TextView
             android:id="@+id/low"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             tools:text="2015" />
     </LinearLayout>
 
