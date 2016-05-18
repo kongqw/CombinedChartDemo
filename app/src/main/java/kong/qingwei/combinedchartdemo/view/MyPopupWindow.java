@@ -37,8 +37,12 @@ public class MyPopupWindow extends PopupWindow implements View.OnKeyListener, On
         mContentView.setOnKeyListener(this);
         // 创建一个PopupWindow并默认获取焦点（如果没有焦点view无法监听到点击事件）
         mPopupWindow = new PopupWindow(mContentView, WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, true);
+        // ***给PopupWindow设置背景
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // 设置PopupWindow之外的其他位置消失
         mPopupWindow.setOutsideTouchable(true);
+
+        mPopupWindow.update();
     }
 
     private void initRecyclerView(Context context) {
