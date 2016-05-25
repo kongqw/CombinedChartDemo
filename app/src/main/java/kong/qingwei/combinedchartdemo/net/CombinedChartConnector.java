@@ -46,8 +46,7 @@ public class CombinedChartConnector {
     public void connect() {
         //创建一个Request
         Request request = new Request.Builder()
-//                .url("https://price.api.btc.com/v1/ticker/line?symbol=okcoinbtccny&interval=1d&offset=0&limit=100")
-                .url("https://price.api.btc.com/dev/ticker/line?symbol=huobibtccny&interval=1d&offset=-600&limit=600")
+                .url("https://price.api.open-nodes.org/v1/ticker/line?symbol=huobibtccny&interval=1d&offset=-600&limit=600")
                 .build();
         //new call
         mCall = mOkHttpClient.newCall(request);
