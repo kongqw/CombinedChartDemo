@@ -161,6 +161,8 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
             entries.add(new CandleEntry(index, a, b, c, dd));
         }
         CandleDataSet set = new CandleDataSet(entries, "K线");
+        // 不显示横向高亮线
+        set.setDrawHorizontalHighlightIndicator(false);
         set.setColor(Color.rgb(80, 80, 80));
         set.setValueTextSize(10f);
         set.setDrawValues(false);
@@ -188,6 +190,8 @@ public class MyCombinedChart extends CombinedChart implements OnChartGestureList
             entries.add(new Entry(sum, index));
         }
         LineDataSet set = new LineDataSet(entries, "MA " + ma);
+        // 不显示横向高亮线
+        set.setDrawHorizontalHighlightIndicator(false);
         set.setColor(5 == ma ? Color.rgb(240, 0, 70) : 10 == ma ? Color.rgb(0, 0, 70) : Color.rgb(100, 100, 255));
         set.setLineWidth(1f);
         set.setDrawCircles(false);

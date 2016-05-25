@@ -1,93 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".activity.MainActivity">
 
-    <kong.qingwei.combinedchartdemo.view.MyTabLayout
-        android:id="@+id/myTabLayout"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="50dp">
+
+        <kong.qingwei.combinedchartdemo.view.MyTabLayout
+            android:id="@+id/myTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <LinearLayout
+            android:id="@+id/details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FFFFFFFF"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="开盘:" />
+
+            <TextView
+                android:id="@+id/open"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                tools:text="2015" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="收盘:" />
+
+            <TextView
+                android:id="@+id/close"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                tools:text="2015" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="最高:" />
+
+            <TextView
+                android:id="@+id/high"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                tools:text="2015" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="最低:" />
+
+            <TextView
+                android:id="@+id/low"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                tools:text="2015" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
 
     <kong.qingwei.combinedchartdemo.view.MyCombinedChart
         android:id="@+id/combinedChart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/myTabLayout" />
+        android:layout_height="0dp"
+        android:paddingBottom="100dp"
+        android:layout_weight="3" />
 
-    <LinearLayout
-        android:id="@+id/details"
+    <kong.qingwei.combinedchartdemo.view.MyBarChart
+        android:id="@+id/barChart"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#FFFFFFFF"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:layout_height="0dp"
+        android:layout_weight="3" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="开盘:" />
-
-        <TextView
-            android:id="@+id/open"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            tools:text="2015" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="收盘:" />
-
-        <TextView
-            android:id="@+id/close"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            tools:text="2015" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="最高:" />
-
-        <TextView
-            android:id="@+id/high"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            tools:text="2015" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:gravity="right"
-            android:text="最低:" />
-
-        <TextView
-            android:id="@+id/low"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            tools:text="2015" />
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>
